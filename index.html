@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>deva — portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Pixelify+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#1f7a78; --deep:#0f3f3e; --yellow:#f4c542; --face:#ebe6d6; --paper:#fffdf5; --ink:#17201f;
+  --px:"Pixelify Sans",ui-monospace,monospace; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
+body{background:var(--teal);color:var(--ink);font:400 15px/1.65 var(--mono);padding:20px 14px 90px;overflow-x:hidden}
+body.booting{overflow:hidden}
+a{color:inherit}
+:focus-visible{outline:3px dashed var(--yellow);outline-offset:3px}
+.win :focus-visible{outline-color:var(--deep)}
+main{max-width:980px;margin:0 auto}
+
+/* boot */
+#boot{position:fixed;inset:0;z-index:50;background:var(--deep);display:grid;place-items:center;padding:24px;transition:opacity .5s ease}
+#boot.out{opacity:0;pointer-events:none}
+#boot p{font:600 clamp(1.4rem,6vw,2.4rem)/1.3 var(--px);color:var(--yellow);max-width:16ch}
+#boot .cur{display:inline-block;width:.55em;height:1em;background:var(--yellow);vertical-align:-.12em;animation:blink .6s steps(1) infinite}
+#skip{position:absolute;right:16px;bottom:16px}
+
+/* buttons */
+.btn{font:600 16px var(--px);background:var(--face);color:var(--ink);border:2px solid var(--ink);padding:8px 18px;cursor:pointer;text-decoration:none;display:inline-block;
+  box-shadow:inset -3px -3px 0 #b9b39f,inset 3px 3px 0 #fff,3px 3px 0 var(--deep)}
+.btn:active{transform:translate(2px,2px);box-shadow:inset 3px 3px 0 #b9b39f,0 0 0 var(--deep)}
+.btn.y{background:var(--yellow);box-shadow:inset -3px -3px 0 #c79a12,inset 3px 3px 0 #ffe58a,3px 3px 0 var(--deep)}
+
+/* hero */
+.hero{min-height:88svh;display:flex;flex-direction:column;justify-content:center;gap:18px;padding:12px 0 40px;position:relative}
+.ico{width:92px;text-align:center;font:400 13px var(--px);color:var(--paper);align-self:flex-end}
+.ico svg{width:64px;height:64px;display:block;margin:0 auto 4px;background:var(--yellow);border:2px solid var(--ink);padding:8px;box-shadow:3px 3px 0 var(--deep)}
+h1{font:700 clamp(6rem,34vw,17rem)/.8;font-family:var(--px);color:var(--yellow);letter-spacing:-.03em;text-shadow:5px 5px 0 var(--deep);margin-left:-.04em}
+.hero.go h1{animation:drop .7s steps(7) both}
+.tag{font:600 clamp(1.3rem,5vw,2rem)/1.25 var(--px);color:var(--paper);max-width:20ch}
+.now{background:var(--deep);color:var(--paper);border:2px solid var(--ink);padding:6px 12px;font-size:13.5px;align-self:flex-start;max-width:100%}
+.now b{color:var(--yellow);font-weight:500}
+.now i{display:inline-block;width:.5em;height:1em;background:var(--yellow);vertical-align:-.15em;margin-left:3px;animation:blink 1s steps(1) infinite}
+.cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+
+/* windows */
+.win{background:var(--face);border:2px solid var(--ink);box-shadow:5px 5px 0 var(--deep);margin:0 0 44px;max-width:640px;scroll-margin-top:16px}
+.win.r{margin-left:auto}
+.win.w{max-width:100%}
+.bar{background:var(--yellow);border-bottom:2px solid var(--ink);display:flex;align-items:center;justify-content:space-between;padding:3px 4px 3px 10px;font:600 17px var(--px)}
+.min{width:28px;height:24px;font:700 16px/1 var(--px);background:var(--face);border:2px solid var(--ink);cursor:pointer;box-shadow:inset -2px -2px 0 #b9b39f,inset 2px 2px 0 #fff}
+.win.shut .body{display:none}
+.body{padding:18px 16px 20px}
+.body p+p{margin-top:1em}
+h2{font:700 clamp(2rem,8vw,3rem)/1 var(--px);margin-bottom:12px}
+.paper{background:var(--paper);border:2px solid var(--ink);box-shadow:inset 2px 2px 0 #cfc9b6;padding:14px}
+
+/* skills */
+.sk{list-style:none;padding:0}
+.sk li{display:flex;justify-content:space-between;gap:10px;align-items:baseline;padding:8px 0;border-bottom:2px dotted #b9b39f}
+.sk li:last-child{border:0}
+.sk em{font:600 14px var(--px);font-style:normal;background:var(--teal);color:var(--paper);padding:1px 9px;white-space:nowrap}
+.sk em.c{background:var(--ink)} .sk em.l{background:var(--yellow);color:var(--ink)}
+
+/* journey folders */
+.fold{margin-top:26px;position:relative}
+.fold:first-of-type{margin-top:30px}
+.fold h3{position:absolute;top:-26px;left:0;font:600 17px var(--px);background:var(--yellow);border:2px solid var(--ink);border-bottom:0;padding:1px 14px}
+.fold ul{list-style:square;padding-left:20px}
+.fold li+li{margin-top:.5em}
+
+/* flip cards */
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.card{perspective:700px;background:none;border:0;padding:0;height:170px;cursor:pointer;font:inherit;color:inherit;text-align:left}
+.card:nth-child(even){margin-top:14px}
+.in{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.3,1.4,.5,1);transform-style:preserve-3d}
+.card[aria-pressed=true] .in{transform:rotateY(180deg)}
+.f,.b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:2px solid var(--ink);padding:12px;box-shadow:3px 3px 0 var(--deep);display:flex;flex-direction:column;justify-content:space-between;font-size:13.5px;line-height:1.45}
+.f{background:var(--yellow);font:600 19px/1.15 var(--px)}
+.f small{font:400 13px var(--mono)}
+.b{background:var(--paper);transform:rotateY(180deg)}
+.card:nth-child(2) .f,.card:nth-child(3) .f{background:var(--teal);color:var(--paper)}
+
+/* contact */
+.ct{list-style:none;padding:0;font-size:16px}
+.ct li{padding:6px 0}
+.ct span{display:inline-block;width:6.5ch;color:#6b6a5c}
+
+/* taskbar */
+nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--face);border-top:2px solid var(--ink);box-shadow:inset 0 3px 0 #fff;display:flex;gap:6px;align-items:center;padding:6px}
+nav .s{background:var(--yellow);font:700 17px var(--px);border:2px solid var(--ink);padding:2px 12px;text-decoration:none;box-shadow:3px 3px 0 var(--deep)}
+nav .t{display:flex;gap:5px;overflow-x:auto;flex:1;scrollbar-width:none}
+nav .t a{font:500 14px var(--px);text-decoration:none;border:2px solid var(--ink);padding:2px 9px;background:var(--face);white-space:nowrap;box-shadow:inset -2px -2px 0 #b9b39f,inset 2px 2px 0 #fff}
+nav .t a.on{background:var(--paper);box-shadow:inset 2px 2px 0 #b9b39f}
+#clock{font:500 14px var(--px);border:2px solid var(--ink);padding:2px 8px;background:var(--paper);box-shadow:inset 2px 2px 0 #cfc9b6;cursor:default;user-select:none}
+
+/* easter egg */
+#egg{position:fixed;inset:0;z-index:60;background:rgba(15,63,62,.7);display:none;place-items:center;padding:20px}
+#egg.show{display:grid}
+#egg .win{margin:0;max-width:340px}
+
+@keyframes blink{50%{opacity:0}}
+@keyframes drop{from{transform:translateY(-40px);opacity:0}to{transform:none;opacity:1}}
+@media(min-width:760px){
+  body{font-size:16px;padding:32px 32px 90px}
+  .hero{flex-direction:column}
+  .ico{position:absolute;top:10px;right:0}
+  .cards{grid-template-columns:repeat(4,1fr)}
+  .card{height:210px}
+  .win{margin-bottom:60px}
+  .win.r{margin-right:4%}
+  .win:not(.r):not(.w){margin-left:4%}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .card[aria-pressed=true] .in{transform:none}
+  .card .b{transform:none;opacity:0}
+  .card[aria-pressed=true] .b{opacity:1;z-index:2}
+}
+</style>
+</head>
+<body class="booting">
+
+<div id="boot" role="presentation"><p><span id="tw"></span><span class="cur"></span></p><button class="btn" id="skip">Skip</button></div>
+
+<main>
+  <header class="hero" id="top">
+    <div class="ico"><svg id="mono" viewBox="0 0 6 7" shape-rendering="crispEdges" role="img" aria-label="Pixel letter D"></svg>d.ico</div>
+    <h1>deva</h1>
+    <!-- EDIT: tagline in your own words -->
+    <p class="tag">First-year IT student who learns by building small, odd things.</p>
+    <!-- EDIT: what you're doing right now -->
+    <p class="now"><b>currently:</b> learning Python and rebuilding this site twice<i></i></p>
+    <div class="cta"><a class="btn y" href="#about">Explore</a><a class="btn" href="#contact">Say hi</a></div>
+  </header>
+
+  <!-- ===== ABOUT ===== EDIT with your Me-Map answers -->
+  <section class="win" id="about" aria-labelledby="h-about">
+    <div class="bar"><span>about.txt</span><button class="min" aria-label="Minimise About window">–</button></div>
+    <div class="body"><h2 id="h-about">Hi, I'm Deva.</h2>
+    <div class="paper">
+      <p>I'm in my first year of B.Tech in Information Technology. I picked it because I like figuring out how things work, and because I would rather make something than just use it.</p>
+      <p>Most of what I know so far, I learned by breaking a small project and then fixing it. I'm still early, and I say so. I ask a lot of questions and I read error messages all the way to the end now.</p>
+      <p>What I want next: build things that other people actually use, even if it's only ten people.</p>
+    </div></div>
+  </section>
+
+  <!-- ===== SKILLS ===== EDIT names + honest levels (Learning / Getting there / Comfortable) -->
+  <section class="win r" id="skills" aria-labelledby="h-skills">
+    <div class="bar"><span>skills/</span><button class="min" aria-label="Minimise Skills window">–</button></div>
+    <div class="body"><h2 id="h-skills">What I can do</h2>
+    <ul class="sk paper">
+      <li>HTML &amp; CSS <em class="c">Comfortable</em></li>
+      <li>JavaScript <em>Getting there</em></li>
+      <li>Python <em class="l">Learning</em></li>
+      <li>C <em class="l">Learning</em></li>
+      <li>Git &amp; GitHub <em>Getting there</em></li>
+    </ul></div>
+  </section>
+
+  <!-- ===== JOURNEY ===== EDIT -->
+  <section class="win w" id="journey" aria-labelledby="h-journey">
+    <div class="bar"><span>journey</span><button class="min" aria-label="Minimise Journey window">–</button></div>
+    <div class="body"><h2 id="h-journey">Where I've been, where I'm going</h2>
+    <div class="paper">
+      <div class="fold"><h3>made</h3><ul><li>This portfolio, from scratch, in one file.</li><li>A small calculator that I rewrote after it broke on decimals.</li></ul></div>
+      <div class="fold"><h3>learning</h3><ul><li>Python basics and how to structure a program.</li><li>Data structures, one week at a time.</li></ul></div>
+      <div class="fold"><h3>want to build</h3><ul><li>A study planner for my own class timetable.</li><li>One app that real people use every day.</li></ul></div>
+    </div></div>
+  </section>
+
+  <!-- ===== BEYOND CODE + SIGNATURE: FLIP CARDS ===== EDIT facts -->
+  <section class="win w" id="beyond" aria-labelledby="h-beyond">
+    <div class="bar"><span>beyond_code.exe</span><button class="min" aria-label="Minimise Beyond code window">–</button></div>
+    <div class="body"><h2 id="h-beyond">Outside the editor</h2>
+    <p style="margin-bottom:18px">I draw, I listen to too much music while debugging, and I collect small facts. Tap a card.</p>
+    <div class="cards">
+      <button class="card" aria-pressed="false"><span class="in"><span class="f">Hobby<small>tap to flip</small></span><span class="b">I sketch in the margins of my notebooks. Half my notes are doodles.</span></span></button>
+      <button class="card" aria-pressed="false"><span class="in"><span class="f">Sound<small>tap to flip</small></span><span class="b">I code to the same playlist on loop. It is about forty songs long.</span></span></button>
+      <button class="card" aria-pressed="false"><span class="in"><span class="f">First bug<small>tap to flip</small></span><span class="b">My first program failed because of one missing semicolon. It took me an hour.</span></span></button>
+      <button class="card" aria-pressed="false"><span class="in"><span class="f">Odd one<small>tap to flip</small></span><span class="b">I can solve a Rubik's cube, but slowly, and I narrate every move.</span></span></button>
+    </div></div>
+  </section>
+
+  <!-- ===== CONTACT ===== EDIT links -->
+  <section class="win r" id="contact" aria-labelledby="h-contact">
+    <div class="bar"><span>contact.txt</span><button class="min" aria-label="Minimise Contact window">–</button></div>
+    <div class="body"><h2 id="h-contact">Say hi</h2>
+    <ul class="ct paper">
+      <li><span>email</span><a href="mailto:deva@example.com">deva@example.com</a></li>
+      <li><span>linkedin</span><a href="https://www.linkedin.com/in/your-name" rel="noopener">/in/your-name</a></li>
+      <li><span>github</span><a href="https://github.com/your-name" rel="noopener">/your-name</a></li>
+    </ul></div>
+  </section>
+</main>
+
+<nav aria-label="Sections">
+  <a class="s" href="#top" aria-label="Back to top">d</a>
+  <div class="t"><a href="#about">about</a><a href="#skills">skills</a><a href="#journey">journey</a><a href="#beyond">beyond</a><a href="#contact">contact</a></div>
+  <div id="clock" aria-hidden="true">--:--</div>
+</nav>
+
+<!-- hidden easter egg: click the clock 3 times -->
+<div id="egg" role="dialog" aria-modal="true" aria-label="Error"><div class="win"><div class="bar"><span>deva.exe</span></div><div class="body"><p><b>Error:</b> deva.exe has stopped being serious.</p><p style="margin-top:10px">You found the clock. Thanks for looking closely.</p><p style="margin-top:16px"><button class="btn y" id="ok">OK</button></p></div></div></div>
+
+<script>
+// pixel monogram (edit the bitmap to change the letter)
+const D=["111100","110010","110001","110001","110001","110010","111100"];
+document.getElementById('mono').innerHTML=D.map((r,y)=>[...r].map((c,x)=>c==='1'?`<rect x="${x}" y="${y}" width="1" height="1" fill="#17201f"/>`:'').join('')).join('');
+
+// typewriter boot: plays once, ~2s
+const boot=document.getElementById('boot'),tw=document.getElementById('tw'),hero=document.querySelector('.hero');
+const msg="hello, world. i'm deva.";let i=0,done=false,timers=[];
+function finish(){if(done)return;done=true;timers.forEach(clearTimeout);boot.classList.add('out');document.body.classList.remove('booting');hero.classList.add('go');setTimeout(()=>boot.remove(),600)}
+function type(){tw.textContent=msg.slice(0,++i);if(i<msg.length)timers.push(setTimeout(type,38));else timers.push(setTimeout(finish,600))}
+document.getElementById('skip').onclick=finish;
+if(matchMedia('(prefers-reduced-motion: reduce)').matches){tw.textContent=msg;timers.push(setTimeout(finish,900))}else type();
+
+// minimise windows
+document.querySelectorAll('.min').forEach(b=>b.onclick=()=>{const w=b.closest('.win');const s=w.classList.toggle('shut');b.textContent=s?'+':'–'});
+
+// flip cards
+document.querySelectorAll('.card').forEach(c=>c.onclick=()=>c.setAttribute('aria-pressed',c.getAttribute('aria-pressed')!=='true'));
+
+// clock + easter egg
+const clock=document.getElementById('clock'),egg=document.getElementById('egg');let taps=0,tt;
+const tick=()=>clock.textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});tick();setInterval(tick,20000);
+clock.onclick=()=>{clearTimeout(tt);if(++taps>=3){taps=0;egg.classList.add('show');document.getElementById('ok').focus()}tt=setTimeout(()=>taps=0,900)};
+document.getElementById('ok').onclick=()=>egg.classList.remove('show');
+addEventListener('keydown',e=>{if(e.key==='Escape')egg.classList.remove('show')});
+
+// highlight active taskbar button
+const links=[...document.querySelectorAll('.t a')];
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-40% 0px -50% 0px'});
+document.querySelectorAll('.win[id]').forEach(s=>io.observe(s));
+</script>
+</body>
+</html>
